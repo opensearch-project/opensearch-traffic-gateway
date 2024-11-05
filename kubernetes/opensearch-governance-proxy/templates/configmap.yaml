@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.governanceRulesConfigMapName }}
+  labels:
+    {{- include "opensearch-governance-proxy.labels" . | nindent 4 }}
+data:
+  governance-config.json: |
+{{ .Values.governanceConfig | default (.Files.Get "default-governance-config.json") | indent 4 }}

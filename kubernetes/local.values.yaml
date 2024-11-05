@@ -1,0 +1,3 @@
+livenessProbe: null
+readinessProbe: null
+targetDomainEndpoint: "http://host.minikube.internal:9200"
