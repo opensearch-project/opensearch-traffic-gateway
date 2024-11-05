@@ -1,0 +1,54 @@
+<saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    ID="_3f0184ac-2c6d-4864-9cd1-d6a2c629b8fe" IssueInstant="2023-05-05T12:34:56Z" Version="2.0">
+    <saml:Issuer>...</saml:Issuer>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+            <Reference URI="#_3f0184ac-2c6d-4864-9cd1-d6a2c629b8fe">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                <DigestValue>...</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>...</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>...</X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+    <saml:Subject>
+        <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">user@example.com</saml:NameID>
+        <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+            <saml:SubjectConfirmationData NotOnOrAfter="2023-05-05T13:34:56Z"
+                Recipient="https://signin.aws.amazon.com/saml" />
+        </saml:SubjectConfirmation>
+    </saml:Subject>
+    <saml:Conditions NotBefore="2023-05-05T12:34:56Z" NotOnOrAfter="2023-05-05T13:34:56Z">
+        <saml:AudienceRestriction>
+            <saml:Audience>urn:amazon:webservices</saml:Audience>
+        </saml:AudienceRestriction>
+    </saml:Conditions>
+    <saml:AuthnStatement AuthnInstant="2023-05-05T12:34:56Z"
+        SessionIndex="_3f0184ac-2c6d-4864-9cd1-d6a2c629b8fe">
+        <saml:AuthnContext>
+            <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</saml:AuthnContextClassRef>
+        </saml:AuthnContext>
+    </saml:AuthnStatement>
+    <saml:AttributeStatement>
+        <saml:Attribute Name="https://aws.amazon.com/SAML/Attributes/RoleSessionName">
+            <saml:AttributeValue>user@example.com</saml:AttributeValue>
+        </saml:Attribute>
+        <saml:Attribute Name="https://aws.amazon.com/SAML/Attributes/Role">
+            <saml:AttributeValue>
+                arn:aws:iam::123456789012:role/ExampleRole</saml:AttributeValue>
+        </saml:Attribute>
+        <saml:Attribute Name="https://aws.amazon.com/SAML/Attributes/SessionDuration">
+            <saml:AttributeValue>3600</saml:AttributeValue>
+        </saml:Attribute>
+    </saml:AttributeStatement>
+</saml:Assertion>

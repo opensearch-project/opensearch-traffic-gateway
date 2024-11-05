@@ -1,0 +1,37 @@
+{
+    "bypassKey": "f6d19d90-5204-4930-9599-60937e4cd4fe",
+    "disableAllGovernanceRules": false,
+    "rules": [
+        {
+            "ruleClass": "software.amazon.opensearch.proxy.governance.RejectSearchQueryDenyListRule",
+            "ruleConfig": {
+                "indexRegex": "^\\.opendistro_security$",
+                "queryStructure": "[{\"query\":{\"match_none\":{}},\"size\":5}, {\"query\":{\"match_none\":{}},\"size\":6}]"
+            }
+        },
+        {
+            "ruleClass": "software.amazon.opensearch.proxy.governance.RejectSearchRegexFieldRule",
+            "ruleConfig": {
+                "indexRegex": "^\\.opendistro_security$",
+                "fieldName": "query.*.*.speaker | [0][0]",
+                "fieldRegex": "[0-9]",
+                "responseMessage": "The custom response."
+            }
+        },
+        {
+            "ruleClass": "software.amazon.opensearch.proxy.governance.RejectTimeRangeRule",
+            "ruleConfig": {
+                "indexRegex": "security-auditlog.*",
+                "rangeField": "@timestamp",
+                "maxTimeRangeMs": 172800000,
+                "rejectIfMissing": false
+            }
+        },
+        {
+            "ruleClass": "software.amazon.opensearch.proxy.governance.UserDenyListRule",
+            "ruleConfig": {
+                "userDenyList": "[\"random\", \"random2\"]"
+            }
+        }
+    ]
+}

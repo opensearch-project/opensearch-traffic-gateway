@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug ProxyServer",
+            "request": "launch",
+            "mainClass": "software.amazon.opensearch.proxy.ProxyServer",
+            "projectName": "proxy-server",
+            "vmArgs": "-Dlog4j2.configurationFile=${workspaceFolder}/proxy-server/src/dist/conf/log4j2.xml",
+            "args": "--capture log --kafkaConnection localhost:9092 --destinationUri https://localhost:9200 --insecureDestination --listenPort 19200 --rulesConfigPath ${workspaceFolder}/proxy-server/src/dist/conf/governance-config.json"
+        },
+        {
+            "type": "java",
+            "name": "Debug OSD ProxyServer",
+            "request": "launch",
+            "mainClass": "software.amazon.opensearch.proxy.ProxyServer",
+            "projectName": "proxy-server",
+            "vmArgs": "-Dlog4j2.configurationFile=${workspaceFolder}/proxy-server/src/dist/conf/log4j2.xml",
+            "args": "--capture log --kafkaConnection localhost:9092 --destinationUri http://localhost:5601 --insecureDestination --listenPort 19200 --rulesConfigPath ${workspaceFolder}/proxy-server/src/dist/conf/governance-config.json"
+        }
+    ]
+}

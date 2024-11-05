@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <JsonTemplateLayout eventTemplateUri="classpath:EcsLayout.json">
+        <EventTemplateAdditionalField 
+          key="message"
+          format="JSON"
+          value='{"$resolver": "objectMapper", "stringified": false}'/>
+        <EventTemplateAdditionalField 
+          key="marker"
+          format="JSON"
+          value='{"$resolver": "marker", "field": "name"}'/>
+        <EventTemplateAdditionalField 
+          key="time"
+          format="JSON"
+          value='{"$resolver": "timestamp", "pattern": {"format":"yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;", "timeZone": "UTC", "locale": "en_US"}}'/>
+      </JsonTemplateLayout>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="WARN">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>
