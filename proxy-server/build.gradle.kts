@@ -3,7 +3,7 @@
  */
 
 plugins {
-    id("software.amazon.opensearch.proxy.java-application-conventions")
+    id("org.opensearch.trafficgateway.proxy.java-application-conventions")
 }
 
 val opensearchMigrationsVersion: String by rootProject.extra
@@ -40,5 +40,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("software.amazon.opensearch.proxy.ProxyServer")
+    mainClass.set("org.opensearch.trafficgateway.proxy.ProxyServer")
 }
