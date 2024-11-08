@@ -3,14 +3,14 @@
     "disableAllGovernanceRules": false,
     "rules": [
         {
-            "ruleClass": "software.amazon.opensearch.proxy.governance.RejectSearchQueryDenyListRule",
+            "ruleClass": "org.opensearch.trafficgateway.proxy.governance.RejectSearchQueryDenyListRule",
             "ruleConfig": {
                 "indexRegex": "^\\.opendistro_security$",
                 "queryStructure": "[{\"query\":{\"match_none\":{}},\"size\":5}, {\"query\":{\"match_none\":{}},\"size\":6}]"
             }
         },
         {
-            "ruleClass": "software.amazon.opensearch.proxy.governance.RejectSearchRegexFieldRule",
+            "ruleClass": "org.opensearch.trafficgateway.proxy.governance.RejectSearchRegexFieldRule",
             "ruleConfig": {
                 "indexRegex": "^\\.opendistro_security$",
                 "fieldName": "query.*.*.speaker | [0][0]",
@@ -19,7 +19,7 @@
             }
         },
         {
-            "ruleClass": "software.amazon.opensearch.proxy.governance.RejectTimeRangeRule",
+            "ruleClass": "org.opensearch.trafficgateway.proxy.governance.RejectTimeRangeRule",
             "ruleConfig": {
                 "indexRegex": "security-auditlog.*",
                 "rangeField": "@timestamp",
@@ -28,7 +28,7 @@
             }
         },
         {
-            "ruleClass": "software.amazon.opensearch.proxy.governance.UserDenyListRule",
+            "ruleClass": "org.opensearch.trafficgateway.proxy.governance.UserDenyListRule",
             "ruleConfig": {
                 "userDenyList": "[\"random\", \"random2\"]"
             }

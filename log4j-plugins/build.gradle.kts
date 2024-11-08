@@ -3,7 +3,7 @@
  */
 
 plugins {
-    id("software.amazon.opensearch.proxy.java-library-conventions")
+    id("org.opensearch.trafficgateway.proxy.java-library-conventions")
 }
 
 val log4jVersion: String by rootProject.extra

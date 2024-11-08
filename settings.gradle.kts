@@ -7,5 +7,5 @@
  * in the user manual at https://docs.gradle.org/7.5.1/userguide/multi_project_builds.html
  */
 
-rootProject.name = "opensearch-governance-proxy"
+rootProject.name = "opensearch-traffic-gateway"
 include("proxy-server", "log4j-plugins")

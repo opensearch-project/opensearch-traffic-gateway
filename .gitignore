@@ -3,5 +3,5 @@
 
 # Ignore Gradle build output directory
 build
-opensearch-governance-proxy.tar
+opensearch-traffic-gateway.tar
 .DS_Store
