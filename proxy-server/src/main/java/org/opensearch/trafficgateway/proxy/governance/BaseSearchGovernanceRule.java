@@ -58,7 +58,8 @@ public abstract class BaseSearchGovernanceRule implements GovernanceRule {
             } else {
                 String[] pathComponents = path.split("/");
 
-                pathComponents = Arrays.stream(pathComponents).filter(e -> !e.isEmpty()).toArray(String[]::new);
+                pathComponents =
+                        Arrays.stream(pathComponents).filter(e -> !e.isEmpty()).toArray(String[]::new);
 
                 if (pathComponents.length == 1 && pathComponents[0].equals(URI_SEARCH_KEYWORD)) {
                     index = WILDCARD;

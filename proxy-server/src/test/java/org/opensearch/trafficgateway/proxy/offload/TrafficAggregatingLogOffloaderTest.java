@@ -89,8 +89,8 @@ public class TrafficAggregatingLogOffloaderTest extends UnitTestBase {
         TrafficAggregatingLogOffloader offloader = new TrafficAggregatingLogOffloader();
         String requestBody = "Hello World!";
         ByteBuf requestContent = copiedBuffer(requestBody, CharsetUtil.UTF_8);
-        FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/test",
-                requestContent);
+        FullHttpRequest request =
+                new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/test", requestContent);
         request.headers().set(HttpHeaderNames.CONTENT_LENGTH, requestContent.readableBytes());
         httpRequestEncoderChannel.writeOutbound(request);
         ByteBuf requestByteBuf = httpRequestEncoderChannel.readOutbound();
@@ -109,7 +109,7 @@ public class TrafficAggregatingLogOffloaderTest extends UnitTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(booleans = { true, false })
+    @ValueSource(booleans = {true, false})
     void testThatAddWriteEventWithFullHttpMessageLogsMessageWithMarker(boolean keepResponseBody) throws IOException {
         // given
         SerializableHttpMessageFactory messageFactory = new SerializableHttpMessageFactory(
@@ -120,8 +120,8 @@ public class TrafficAggregatingLogOffloaderTest extends UnitTestBase {
                 TrafficAggregatingLogOffloader.DEFAULT_MAX_CONTENT_LENGTH, messageFactory);
         String responseBody = "Hello World!";
         ByteBuf responseContent = copiedBuffer(responseBody, CharsetUtil.UTF_8);
-        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
-                responseContent);
+        FullHttpResponse response =
+                new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, responseContent);
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, responseContent.readableBytes());
         httpResponseEncoderChannel.writeOutbound(response);
         ByteBuf responseByteBuf = httpResponseEncoderChannel.readOutbound();
@@ -147,7 +147,7 @@ public class TrafficAggregatingLogOffloaderTest extends UnitTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(booleans = { true, false })
+    @ValueSource(booleans = {true, false})
     @WrapWithNettyLeakDetection(repetitions = 32)
     void testThatAddWriteEventWithFullHttpMessageDoesNotLeak(boolean keepResponseBody) throws IOException {
         testThatAddWriteEventWithFullHttpMessageLogsMessageWithMarker(keepResponseBody);

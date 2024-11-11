@@ -65,8 +65,9 @@ public class GovernanceHandlerTest extends UnitTestBase {
         Object requestBuf = requestEncoder.readOutbound();
         chunkedDecoder.writeInbound(requestBuf);
 
-        for (Object decodedMsg = chunkedDecoder.readInbound(); decodedMsg != null; decodedMsg = chunkedDecoder
-                .readInbound()) {
+        for (Object decodedMsg = chunkedDecoder.readInbound();
+                decodedMsg != null;
+                decodedMsg = chunkedDecoder.readInbound()) {
             requestEncoder.writeOutbound(decodedMsg);
         }
 
@@ -76,8 +77,9 @@ public class GovernanceHandlerTest extends UnitTestBase {
 
         // when
         try {
-            for (Object encodedMsg = requestEncoder.readOutbound(); encodedMsg != null; encodedMsg = requestEncoder
-                    .readOutbound()) {
+            for (Object encodedMsg = requestEncoder.readOutbound();
+                    encodedMsg != null;
+                    encodedMsg = requestEncoder.readOutbound()) {
                 governanceHandler.channelRead(this.ctx, encodedMsg);
             }
         } catch (Exception e) {
@@ -110,8 +112,9 @@ public class GovernanceHandlerTest extends UnitTestBase {
         Object requestBuf = requestEncoder.readOutbound();
         chunkedDecoder.writeInbound(requestBuf);
 
-        for (Object decodedMsg = chunkedDecoder.readInbound(); decodedMsg != null; decodedMsg = chunkedDecoder
-                .readInbound()) {
+        for (Object decodedMsg = chunkedDecoder.readInbound();
+                decodedMsg != null;
+                decodedMsg = chunkedDecoder.readInbound()) {
             requestEncoder.writeOutbound(decodedMsg);
         }
 
@@ -121,8 +124,9 @@ public class GovernanceHandlerTest extends UnitTestBase {
 
         // when
         try {
-            for (Object encodedMsg = requestEncoder.readOutbound(); encodedMsg != null; encodedMsg = requestEncoder
-                    .readOutbound()) {
+            for (Object encodedMsg = requestEncoder.readOutbound();
+                    encodedMsg != null;
+                    encodedMsg = requestEncoder.readOutbound()) {
                 governanceHandler.channelRead(this.ctx, encodedMsg);
             }
         } catch (Exception e) {

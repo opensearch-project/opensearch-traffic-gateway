@@ -39,26 +39,55 @@ import org.opensearch.trafficgateway.proxy.util.UserIdExtractor;
 @Log4j2
 public class ProxyServer extends CaptureProxy {
     protected static class GovernanceProxyParameters extends Parameters {
-        @Parameter(required = false, names = "--jaasConfigPath", arity = 1, description = "Path to the JAAS configuration file specifying authentication for secure connections")
+        @Parameter(
+                required = false,
+                names = "--jaasConfigPath",
+                arity = 1,
+                description = "Path to the JAAS configuration file specifying authentication for secure connections")
         public String jaasConfigPath;
 
-        @Parameter(required = false, names = "--rulesConfigPath", arity = 1, description = "Path to the Rules configuration file specifying different rules for filtering")
+        @Parameter(
+                required = false,
+                names = "--rulesConfigPath",
+                arity = 1,
+                description = "Path to the Rules configuration file specifying different rules for filtering")
         public String rulesConfigPath;
 
-        @Parameter(required = false, names = "--captureResponseBody", arity = 0, description = "Whether to capture the response body in captured traffic.")
+        @Parameter(
+                required = false,
+                names = "--captureResponseBody",
+                arity = 0,
+                description = "Whether to capture the response body in captured traffic.")
         public boolean captureResponseBody = false;
 
-        @Parameter(required = false, names = "--maxCapturedContentLength", arity = 1, description = "Max content length per request/response for captured HTTP content. Content longer than this will be truncated.")
+        @Parameter(
+                required = false,
+                names = "--maxCapturedContentLength",
+                arity = 1,
+                description =
+                        "Max content length per request/response for captured HTTP content. Content longer than this will be truncated.")
         public int maxCapturedContentLength = TrafficAggregatingLogOffloader.DEFAULT_MAX_CONTENT_LENGTH;
 
-        @Parameter(required = true, names = {
-                "--capture" }, arity = 1, description = "What capture implementations to use. Valid values are 'kafka' and 'log'. Multiple values can be specified like '--capture kafka --capture log'.")
+        @Parameter(
+                required = true,
+                names = {"--capture"},
+                arity = 1,
+                description =
+                        "What capture implementations to use. Valid values are 'kafka' and 'log'. Multiple values can be specified like '--capture kafka --capture log'.")
         public List<String> captures = new ArrayList<>();
 
-        @Parameter(required = false, names = "--samlUserIdXPath", arity = 1, description = "XPath to the userId in the saml assertion XML. Must return a String.")
+        @Parameter(
+                required = false,
+                names = "--samlUserIdXPath",
+                arity = 1,
+                description = "XPath to the userId in the saml assertion XML. Must return a String.")
         public String samlUserIdXPath = UserIdExtractor.DEFAULT_SAML_USER_ID_XPATH;
 
-        @Parameter(required = false, names = "--samlTokenCookieName", arity = 1, description = "Cookie name that contains the SAML assertion that is sent to OpenSearch.")
+        @Parameter(
+                required = false,
+                names = "--samlTokenCookieName",
+                arity = 1,
+                description = "Cookie name that contains the SAML assertion that is sent to OpenSearch.")
         public String samlTokenCookieName = UserIdExtractor.DEFAULT_SAML_TOKEN_COOKIE_NAME;
     }
 
@@ -114,8 +143,8 @@ public class ProxyServer extends CaptureProxy {
                                 "'kafka' capture was specified by '--kafkaConnection' was not provided.");
                     }
                     @SuppressWarnings("unchecked")
-                    IConnectionCaptureFactory<Object> suppressedCaptureToAdd = (IConnectionCaptureFactory<Object>) CaptureProxy
-                            .getConnectionCaptureFactory(params, rootContext);
+                    IConnectionCaptureFactory<Object> suppressedCaptureToAdd = (IConnectionCaptureFactory<Object>)
+                            CaptureProxy.getConnectionCaptureFactory(params, rootContext);
                     captureToAdd = suppressedCaptureToAdd;
                     break;
                 default:
@@ -159,12 +188,12 @@ public class ProxyServer extends CaptureProxy {
         sksOp.ifPresent(DefaultSecurityKeyStore::initHttpSSLConfig);
 
         return sksOp.map(sks -> (Supplier<SSLEngine>) () -> {
-            try {
-                return sks.createHTTPSSLEngine();
-            } catch (Exception e) {
-                throw Lombok.sneakyThrow(e);
-            }
-        })
+                    try {
+                        return sks.createHTTPSSLEngine();
+                    } catch (Exception e) {
+                        throw Lombok.sneakyThrow(e);
+                    }
+                })
                 .orElse(null);
     }
 
@@ -220,8 +249,8 @@ public class ProxyServer extends CaptureProxy {
 
         IConnectionCaptureFactory<Object> captureFactory = getCaptureFactory(params, rootContext);
 
-        HeaderValueFilteringCapturePredicate headerCapturePredicate = new HeaderValueFilteringCapturePredicate(
-                convertPairListToMap(params.suppressCaptureHeaderPairs));
+        HeaderValueFilteringCapturePredicate headerCapturePredicate =
+                new HeaderValueFilteringCapturePredicate(convertPairListToMap(params.suppressCaptureHeaderPairs));
 
         GovernanceProxy proxy = startProxy(
                 params,

@@ -39,10 +39,10 @@ public interface GovernanceRule {
 
     @SneakyThrows
     private String constructJsonRejectionResponse(String message) {
-        GovernanceRejectionError error = new GovernanceRejectionError(
-                GovernanceRejectionResponseBody.GOVERNANCE_REJECTION_ERROR_TYPE, message);
-        GovernanceRejectionResponseBody response = new GovernanceRejectionResponseBody(error,
-                getRejectResultHttpStatusCode());
+        GovernanceRejectionError error =
+                new GovernanceRejectionError(GovernanceRejectionResponseBody.GOVERNANCE_REJECTION_ERROR_TYPE, message);
+        GovernanceRejectionResponseBody response =
+                new GovernanceRejectionResponseBody(error, getRejectResultHttpStatusCode());
         return MAPPER.writeValueAsString(response);
     }
 }

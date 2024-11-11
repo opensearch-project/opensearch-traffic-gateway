@@ -24,8 +24,8 @@ public class GovernanceRuleConfigLoader {
 
     @SneakyThrows
     private GovernanceConfiguration parseGovernanceConfig() {
-        try (BufferedReader configFileReader = new BufferedReader(
-                new FileReader(System.getProperty(CONFIG_FILE_PROPERTY_NAME)))) {
+        try (BufferedReader configFileReader =
+                new BufferedReader(new FileReader(System.getProperty(CONFIG_FILE_PROPERTY_NAME)))) {
             return JSON_MAPPER.readValue(configFileReader, GovernanceConfiguration.class);
         }
     }
@@ -51,8 +51,8 @@ public class GovernanceRuleConfigLoader {
     @SneakyThrows
     public GovernanceRule instantiateRule(GovernanceRuleConfiguration ruleConfig) {
         @SuppressWarnings("unchecked")
-        Class<? extends GovernanceRule> ruleClass = (Class<? extends GovernanceRule>) Class
-                .forName(ruleConfig.getRuleClass());
+        Class<? extends GovernanceRule> ruleClass =
+                (Class<? extends GovernanceRule>) Class.forName(ruleConfig.getRuleClass());
 
         int numParameters = ruleConfig.getRuleConfig().size();
         List<Class<String>> constructorTypes = Collections.nCopies(numParameters, String.class);
