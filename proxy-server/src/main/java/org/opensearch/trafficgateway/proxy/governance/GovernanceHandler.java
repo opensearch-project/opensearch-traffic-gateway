@@ -143,8 +143,9 @@ public class GovernanceHandler extends ChannelInboundHandlerAdapter {
                 "Writing outbound messages from embedded channel. {} messages available.",
                 () -> requestProcessingChannel.outboundMessages().size());
 
-        for (Object outboundMsg = requestProcessingChannel
-                .readOutbound(); outboundMsg != null; outboundMsg = requestProcessingChannel.readOutbound()) {
+        for (Object outboundMsg = requestProcessingChannel.readOutbound();
+                outboundMsg != null;
+                outboundMsg = requestProcessingChannel.readOutbound()) {
             ctx.pipeline().write(outboundMsg);
         }
         ctx.pipeline().flush();
@@ -167,9 +168,9 @@ public class GovernanceHandler extends ChannelInboundHandlerAdapter {
             // The encoder was splitting the FullHttpRequest into two parts
             // And we were only passing along the request content so we pass it directly
             // from the embedded channel in order
-            for (Object modifiedMsg = modifiedRequestProcessingChannel
-                    .readOutbound(); modifiedMsg != null; modifiedMsg = modifiedRequestProcessingChannel
-                            .readOutbound()) {
+            for (Object modifiedMsg = modifiedRequestProcessingChannel.readOutbound();
+                    modifiedMsg != null;
+                    modifiedMsg = modifiedRequestProcessingChannel.readOutbound()) {
                 if (modifiedMsg instanceof ByteBuf) {
                     super.channelRead(ctx, modifiedMsg);
                 }

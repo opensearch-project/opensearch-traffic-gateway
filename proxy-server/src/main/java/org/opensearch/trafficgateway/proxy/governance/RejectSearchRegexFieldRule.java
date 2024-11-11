@@ -42,8 +42,8 @@ public class RejectSearchRegexFieldRule extends BaseSearchGovernanceRule {
         if (responseMessage != null) {
             this.responseMessage = responseMessage;
         } else {
-            this.responseMessage = "Field: '" + fieldName + "' matches regex pattern: '" + fieldRegexPattern.pattern()
-                    + "'";
+            this.responseMessage =
+                    "Field: '" + fieldName + "' matches regex pattern: '" + fieldRegexPattern.pattern() + "'";
         }
     }
 

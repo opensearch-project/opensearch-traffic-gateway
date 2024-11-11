@@ -70,10 +70,10 @@ ingress:
 resources:
   requests:
     cpu: "0.5"
-    memory: "2G"
+    memory: "1G"
   limits:
     cpu: "1"
-    memory: "4G"
+    memory: "2G"
 
 livenessProbe:
   httpGet:

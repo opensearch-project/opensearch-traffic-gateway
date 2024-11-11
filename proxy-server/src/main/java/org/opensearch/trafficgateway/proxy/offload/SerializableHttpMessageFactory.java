@@ -15,8 +15,8 @@ import org.opensearch.trafficgateway.proxy.offload.SerializableHttpMessage.Reque
 import org.opensearch.trafficgateway.proxy.util.UserIdExtractor;
 
 public class SerializableHttpMessageFactory {
-    private static final Set<AsciiString> HEADERS_TO_REMOVE = Set.of(HttpHeaderNames.AUTHORIZATION,
-            HttpHeaderNames.COOKIE, HttpHeaderNames.SET_COOKIE);
+    private static final Set<AsciiString> HEADERS_TO_REMOVE =
+            Set.of(HttpHeaderNames.AUTHORIZATION, HttpHeaderNames.COOKIE, HttpHeaderNames.SET_COOKIE);
 
     private final boolean keepResponseBody;
     private final UserIdExtractor userIdExtractor;

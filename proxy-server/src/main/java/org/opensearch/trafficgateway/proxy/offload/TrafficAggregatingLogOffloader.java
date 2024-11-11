@@ -20,11 +20,12 @@ import org.opensearch.trafficgateway.proxy.util.UserIdExtractor;
 @Log4j2
 public class TrafficAggregatingLogOffloader implements IChannelConnectionCaptureSerializer<Void> {
     public static final int DEFAULT_MAX_CONTENT_LENGTH = 209715200; // 200 MB
-    public static final Marker CAPTURED_TRAFFIC_MARKER = MarkerManager
-            .getMarker("org.opensearch.trafficgateway.proxy.offload.CAPTURED_TRAFFIC");
+    public static final Marker CAPTURED_TRAFFIC_MARKER =
+            MarkerManager.getMarker("org.opensearch.trafficgateway.proxy.offload.CAPTURED_TRAFFIC");
 
-    private static final SerializableHttpMessageFactory DEfAULT_MESSAGE_FACTORY_INSTANCE = new SerializableHttpMessageFactory(
-            false, UserIdExtractor.DEFAULT_SAML_USER_ID_XPATH, UserIdExtractor.DEFAULT_SAML_TOKEN_COOKIE_NAME);
+    private static final SerializableHttpMessageFactory DEfAULT_MESSAGE_FACTORY_INSTANCE =
+            new SerializableHttpMessageFactory(
+                    false, UserIdExtractor.DEFAULT_SAML_USER_ID_XPATH, UserIdExtractor.DEFAULT_SAML_TOKEN_COOKIE_NAME);
 
     private final EmbeddedChannel requestProcessingChannel;
     private final EmbeddedChannel responseProcessingChannel;
@@ -51,8 +52,8 @@ public class TrafficAggregatingLogOffloader implements IChannelConnectionCapture
         protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
             currentRequestId = UUID.randomUUID().toString();
 
-            SerializableHttpMessage request = messageFactory.serializeRequest(currentRequestId, currentRequestTimestamp,
-                    msg);
+            SerializableHttpMessage request =
+                    messageFactory.serializeRequest(currentRequestId, currentRequestTimestamp, msg);
             log.always().withMarker(CAPTURED_TRAFFIC_MARKER).log(request);
 
             currentRequestTimestamp = null;
@@ -67,8 +68,8 @@ public class TrafficAggregatingLogOffloader implements IChannelConnectionCapture
                 currentRequestId = UUID.randomUUID().toString();
             }
 
-            SerializableHttpMessage response = messageFactory.serializeResponse(currentRequestId,
-                    currentResponseTimestamp, msg);
+            SerializableHttpMessage response =
+                    messageFactory.serializeResponse(currentRequestId, currentResponseTimestamp, msg);
             log.always().withMarker(CAPTURED_TRAFFIC_MARKER).log(response);
             currentResponseTimestamp = null;
         }

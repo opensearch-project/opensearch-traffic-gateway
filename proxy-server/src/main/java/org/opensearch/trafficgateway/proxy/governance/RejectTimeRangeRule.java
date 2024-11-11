@@ -111,10 +111,8 @@ public class RejectTimeRangeRule extends BaseSearchGovernanceRule {
         if (foundValidRange) {
             return true;
         } else {
-            if (!rejectIfMissing)
-                return rangeFound != 1;
-            else
-                return false;
+            if (!rejectIfMissing) return rangeFound != 1;
+            else return false;
         }
     }
 
