@@ -1,5 +1,6 @@
 package org.opensearch.trafficgateway.proxy.governance;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import io.netty.buffer.ByteBuf;
@@ -48,6 +49,9 @@ public class GovernanceHandlerTest extends UnitTestBase {
         this.chunkedDecoder.close();
     }
 
+    /*
+     * MultiPart = content is larger than the maxChunkSize in HttpRequestDecoder
+     */
     @Test
     void testValidBypassKeyWithInvalidQueryHandlesMultiPartRequests() {
         // given
@@ -95,6 +99,9 @@ public class GovernanceHandlerTest extends UnitTestBase {
         Assertions.assertEquals(splitCapturedValue[3], "{\"query\":{\"prefix\":{\"speaker\":9}}}");
     }
 
+    /*
+     * MultiPart = content is larger than the maxChunkSize in HttpRequestDecoder
+     */
     @Test
     void testInvalidBypassKeyWithInvalidQueryHandlesMultiPartRequests() {
         // given

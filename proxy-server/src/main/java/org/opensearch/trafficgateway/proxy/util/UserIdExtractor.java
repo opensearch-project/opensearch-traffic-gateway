@@ -25,6 +25,9 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.w3c.dom.Document;
 
+/*
+ * NOTE: Will not work with SigV4.
+ */
 @Log4j2
 public class UserIdExtractor {
     public static final String DEFAULT_SAML_USER_ID_XPATH = "/Assertion/Subject/NameID[text()]";

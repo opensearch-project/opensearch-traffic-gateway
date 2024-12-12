@@ -21,6 +21,8 @@ dependencies {
     implementation("org.apache.commons:commons-lang3")
 
     implementation("com.fasterxml.jackson.core:jackson-databind")
+    
+    // TODO: This dependency is deprecated.
     implementation("io.burt:jmespath-jackson")
 
     implementation("io.netty:netty-all")

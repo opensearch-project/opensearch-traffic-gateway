@@ -10,6 +10,11 @@ import java.util.stream.Stream;
 import lombok.extern.log4j.Log4j2;
 import org.opensearch.migrations.trafficcapture.IChannelConnectionCaptureSerializer;
 
+/*
+ * TODO: This might be more maintainable if multiple netty handlers were used in succession and
+ * there were no side effects (might need a setup/teardown sort of functionality to bookend the
+ * offloading handlers)
+ */
 @Log4j2
 public class MultiTargetOffloader implements IChannelConnectionCaptureSerializer<Object> {
     private final IChannelConnectionCaptureSerializer<?>[] offloaders;

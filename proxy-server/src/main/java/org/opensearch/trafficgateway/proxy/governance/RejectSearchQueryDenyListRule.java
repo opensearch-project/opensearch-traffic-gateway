@@ -71,6 +71,7 @@ public class RejectSearchQueryDenyListRule extends BaseSearchGovernanceRule {
     // de-limiters are consistent
     // for both the request body and deny structure then we can just do a direct
     // comparison on the String Sets.
+    // TODO: Use JMES for this.
     private boolean compareJson(JsonNode testJsonElement, JsonNode denyListJsonArray) {
         Set<String> testElements = new HashSet<>();
 
