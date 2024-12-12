@@ -19,6 +19,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class GovernanceHandler extends ChannelInboundHandlerAdapter {
     private static final String BYPASS_KEY_KEYWORD = "bypassKey";
+    private static final int DEFAULT_MAX_CONTENT_LENGTH = 2147483647;
     private final EmbeddedChannel requestProcessingChannel;
     private final EmbeddedChannel modifiedRequestProcessingChannel;
 
@@ -31,7 +32,7 @@ public class GovernanceHandler extends ChannelInboundHandlerAdapter {
         requestProcessingChannel = new EmbeddedChannel(
                 new HttpRequestDecoder(),
                 new HttpResponseEncoder(),
-                new HttpObjectAggregator(2147483647),
+                new HttpObjectAggregator(DEFAULT_MAX_CONTENT_LENGTH),
                 governanceRuleHandler);
     }
 

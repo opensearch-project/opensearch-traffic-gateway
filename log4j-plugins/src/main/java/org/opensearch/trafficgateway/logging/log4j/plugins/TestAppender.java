@@ -21,6 +21,10 @@ import lombok.Getter;
 
 @Plugin(name = "TestAppender", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE)
 public class TestAppender extends AbstractAppender {
+    /*
+     * TODO: Move this to a test fixture.
+     */
+
     @Getter
     private final List<LogEvent> messages = new ArrayList<>();
 

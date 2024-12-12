@@ -14,6 +14,9 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.util.CharsetUtil;
 import java.util.List;
 
+/*
+ * TODO: There is a similar class in opensearch-migrations project.
+ */
 public class TruncatingHttpObjectAggregator extends HttpObjectAggregator {
     private static final ByteBuf TRUNCATED_TAG = copiedBuffer("...<TRUNCATED>", CharsetUtil.UTF_8);
 

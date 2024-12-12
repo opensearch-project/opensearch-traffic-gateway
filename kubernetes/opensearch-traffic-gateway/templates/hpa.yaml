@@ -10,6 +10,9 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "opensearch-traffic-gateway.fullname" . }}
+  {{/*
+  TODO: Use custom metrics to scale off of network utilization.
+  */}}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

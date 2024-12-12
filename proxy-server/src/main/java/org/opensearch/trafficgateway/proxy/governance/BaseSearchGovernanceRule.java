@@ -13,6 +13,9 @@ import java.util.regex.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+/*
+ * TODO: javadoc.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @ToString
@@ -63,10 +66,8 @@ public abstract class BaseSearchGovernanceRule implements GovernanceRule {
 
                 if (pathComponents.length == 1 && pathComponents[0].equals(URI_SEARCH_KEYWORD)) {
                     index = WILDCARD;
-                    // return indexRegexPattern.matcher(WILDCARD).matches();
                 } else if (pathComponents.length >= 2 && pathComponents[1].equals(URI_SEARCH_KEYWORD)) {
                     index = pathComponents[0];
-                    // return indexRegexPattern.matcher(pathComponents[0]).matches();
                 } else {
                     return null;
                 }

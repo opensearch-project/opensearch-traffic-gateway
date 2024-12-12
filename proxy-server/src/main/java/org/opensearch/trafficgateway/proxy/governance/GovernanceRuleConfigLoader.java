@@ -16,6 +16,9 @@ import org.opensearch.trafficgateway.proxy.governance.GovernanceConfiguration.Go
 
 @Log4j2
 public class GovernanceRuleConfigLoader {
+    /*
+     * TODO: replace property name with ability to read config directly from stream.
+     */
     public static final String CONFIG_FILE_PROPERTY_NAME = "proxy.governance.configurationFile";
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 

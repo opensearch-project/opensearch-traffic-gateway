@@ -30,6 +30,7 @@ public class CustomQueryParser extends XQueryParser {
         if (field != null) {
             if (queryText.length() > 1) {
                 if (queryText.charAt(0) == '>') {
+                    // query only has a lower range, so assume the top-end of the range is "now".
                     if (queryText.length() > 2) {
                         if (queryText.charAt(1) == '=') {
                             return super.getRangeQuery(field, queryText.substring(2), DATE_NOW, true, true);
