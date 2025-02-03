@@ -1,0 +1,78 @@
+name: CI Workflow
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-project:
+    runs-on: ubuntu-latest
+    env:
+      OPENSEARCH_PASSWORD: "Password1234!@#$"
+    services:
+      minikube:
+        image: gcr.io/k8s-minikube/kicbase:v0.0.39
+        options: >-
+          --privileged
+      opensearch:
+        image: opensearchproject/opensearch:latest
+        env:
+          OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${{env.OPENSEARCH_PASSWORD}}
+          discovery.type: "single-node"
+        options: >-
+          --health-cmd "curl -XGET https://127.0.0.1:9200/_cat/indices -u admin:$(printenv OPENSEARCH_INITIAL_ADMIN_PASSWORD) --insecure"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Test OpenSearch Login
+        run: |
+          curl -XGET https://opensearch:9200/_cat/indices -u "admin:$OPENSEARCH_PASSWORD" --insecure
+
+      - name: Install Minikube CLI
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker --force-systemd=true --container-runtime=containerd
+
+      - name: Build Proxy Server and Load Image to Minikube
+        run: |
+          ./gradlew :proxy-server:build
+          docker build -t opensearch-traffic-gateway -f docker/opensearch-traffic-gateway/Dockerfile .
+          docker image save -o opensearch-traffic-gateway.tar opensearch-traffic-gateway
+          minikube image load opensearch-traffic-gateway.tar
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Install Helm Chart
+        run: |
+          helm install -f kubernetes/local.values.yaml opensearch-traffic-gateway ./kubernetes/opensearch-traffic-gateway
+          sleep 30 # Give the service time to start
+
+      - name: Expose Service via Minikube
+        run: |
+          echo "SERVICE_URL=$(minikube service opensearch-traffic-gateway --url)" >> $GITHUB_ENV
+          sleep 10
+
+      - name: Test Proxy Server
+        run: |
+          curl -XGET "$SERVICE_URL/_cat/indices" -u "admin:$OPENSEARCH_PASSWORD" --insecure
+
+      - name: Check Proxy Logs
+        run: |
+          kubectl logs -l app.kubernetes.io/name=opensearch-traffic-gateway
+
+      - name: Cleanup
+        run: |
+          helm uninstall opensearch-traffic-gateway
+          minikube delete --all
