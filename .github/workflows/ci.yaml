@@ -94,6 +94,7 @@ jobs:
           curl -XGET "$SERVICE_URL/_cat/indices" -u "admin:$OPENSEARCH_PASSWORD" --insecure
 
       - name: Check Proxy Logs
+        if: always()
         run: |
           kubectl logs -l app.kubernetes.io/name=opensearch-traffic-gateway
 
