@@ -18,8 +18,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Cache Docker Images
+        uses: actions/cache@v4
+        with:
+          path: /tmp/docker-cache
+          key: docker-${{ runner.os }}-cache
+          restore-keys: |
+            docker-${{ runner.os }}-
+
+      - name: Load Cached OpenSearch Image (if available)
+        run: |
+          if [ -f /tmp/docker-cache/opensearch.tar ]; then
+            docker load -i /tmp/docker-cache/opensearch.tar
+          fi
+
       - name: Start OpenSearch
         run: |
+          if ! docker images | grep -q "opensearchproject/opensearch"; then
+            docker pull opensearchproject/opensearch:latest
+            docker save -o /tmp/docker-cache/opensearch.tar opensearchproject/opensearch:latest
+          fi
           docker run -d --name opensearch -p 9200:9200 -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=$OPENSEARCH_PASSWORD" -e "discovery.type=single-node" opensearchproject/opensearch:latest
           sleep 30 # Allow OpenSearch time to initialize
 
@@ -32,8 +50,18 @@ jobs:
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
+      - name: Load Cached Minikube Image (if available)
+        run: |
+          if [ -f /tmp/docker-cache/minikube.tar ]; then
+            docker load -i /tmp/docker-cache/minikube.tar
+          fi
+
       - name: Start Minikube
         run: |
+          if ! docker images | grep -q "gcr.io/k8s-minikube/kicbase"; then
+            docker pull gcr.io/k8s-minikube/kicbase:v0.0.39
+            docker save -o /tmp/docker-cache/minikube.tar gcr.io/k8s-minikube/kicbase:v0.0.39
+          fi
           minikube start --driver=docker --force-systemd=true --container-runtime=containerd
 
       - name: Build Proxy Server and Load Image to Minikube
@@ -56,7 +84,7 @@ jobs:
 
       - name: Expose Service via Minikube
         run: |
-          echo "SERVICE_URL=$(minikube service opensearch-traffic-gateway --url)" >> $GITHUB_ENV
+          echo "SERVICE_URL=https://$(minikube service opensearch-traffic-gateway --url | sed 's|http://|https://|')" >> $GITHUB_ENV
           sleep 10
 
       - name: Test Proxy Server
