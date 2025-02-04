@@ -14,23 +14,18 @@ jobs:
         image: gcr.io/k8s-minikube/kicbase:v0.0.39
         options: >-
           --privileged
-      opensearch:
-        image: opensearchproject/opensearch:latest
-        env:
-          OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${{env.OPENSEARCH_PASSWORD}}
-          discovery.type: "single-node"
-        options: >-
-          --health-cmd "curl -XGET https://127.0.0.1:9200/_cat/indices -u admin:$(printenv OPENSEARCH_INITIAL_ADMIN_PASSWORD) --insecure"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Start OpenSearch
+        run: |
+          docker run -d --name opensearch -p 9200:9200 -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=$OPENSEARCH_PASSWORD" -e "discovery.type=single-node" opensearchproject/opensearch:latest
+          sleep 30 # Allow OpenSearch time to initialize
+
       - name: Test OpenSearch Login
         run: |
-          curl -XGET https://opensearch:9200/_cat/indices -u "admin:$OPENSEARCH_PASSWORD" --insecure
+          curl -XGET http://127.0.0.1:9200/_cat/indices -u "admin:$OPENSEARCH_PASSWORD" --insecure
 
       - name: Install Minikube CLI
         run: |
@@ -75,4 +70,5 @@ jobs:
       - name: Cleanup
         run: |
           helm uninstall opensearch-traffic-gateway
+          docker stop opensearch && docker rm opensearch
           minikube delete --all
