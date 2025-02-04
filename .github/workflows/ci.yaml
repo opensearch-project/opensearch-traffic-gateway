@@ -1,0 +1,104 @@
+name: CI Workflow
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-project:
+    runs-on: ubuntu-latest
+    env:
+      OPENSEARCH_PASSWORD: "Password1234!@#$"
+    services:
+      minikube:
+        image: gcr.io/k8s-minikube/kicbase:v0.0.39
+        options: >-
+          --privileged
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - run: mkdir /tmp/docker-cache -p
+
+      - name: Cache Docker Images
+        uses: actions/cache@v4
+        with:
+          path: /tmp/docker-cache
+          key: docker-${{ runner.os }}-cache
+          restore-keys: |
+            docker-${{ runner.os }}-
+
+      - name: Load Cached OpenSearch Image (if available)
+        run: |
+          if [ -f /tmp/docker-cache/opensearch.tar ]; then
+            docker load -i /tmp/docker-cache/opensearch.tar
+          fi
+
+      - name: Start OpenSearch
+        run: |
+          if ! docker images | grep -q "opensearchproject/opensearch"; then
+            docker pull opensearchproject/opensearch:latest
+            docker save -o /tmp/docker-cache/opensearch.tar opensearchproject/opensearch:latest
+          fi
+          docker run -d --name opensearch -p 9200:9200 -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=$OPENSEARCH_PASSWORD" -e "discovery.type=single-node" opensearchproject/opensearch:latest
+          until curl -XGET https://127.0.0.1:9200/_cluster/health -u "admin:$OPENSEARCH_PASSWORD" --insecure | grep -q '"status":"green"'; do echo "Waiting for OpenSearch..."; sleep 2; done
+
+      - name: Test OpenSearch Login
+        run: |
+          curl -XGET https://127.0.0.1:9200/_cat/indices -u "admin:$OPENSEARCH_PASSWORD" --insecure
+
+      - name: Install Minikube CLI
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+      - name: Load Cached Minikube Image (if available)
+        run: |
+          if [ -f /tmp/docker-cache/minikube.tar ]; then
+            docker load -i /tmp/docker-cache/minikube.tar
+          fi
+
+      - name: Start Minikube
+        run: |
+          if ! docker images | grep -q "gcr.io/k8s-minikube/kicbase"; then
+            docker pull gcr.io/k8s-minikube/kicbase:v0.0.39
+            docker save -o /tmp/docker-cache/minikube.tar gcr.io/k8s-minikube/kicbase:v0.0.39
+          fi
+          minikube start --driver=docker --force-systemd=true --container-runtime=containerd
+
+      - name: Build Proxy Server and Load Image to Minikube
+        run: |
+          ./gradlew :proxy-server:build
+          docker build -t opensearch-traffic-gateway -f docker/opensearch-traffic-gateway/Dockerfile .
+          docker image save -o opensearch-traffic-gateway.tar opensearch-traffic-gateway
+          minikube image load opensearch-traffic-gateway.tar
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Install Helm Chart
+        run: |
+          helm install -f kubernetes/local.values.yaml opensearch-traffic-gateway ./kubernetes/opensearch-traffic-gateway
+          until helm status opensearch-traffic-gateway | grep -q 'STATUS: deployed'; do echo "Waiting for Helm deployment..."; sleep 2; done
+
+      - name: Expose Service via Minikube
+        run: |
+          echo "SERVICE_URL=$(minikube service opensearch-traffic-gateway --url | sed 's|http://|https://|')" >> $GITHUB_ENV
+
+      - name: Test Proxy Server
+        run: |
+          curl -XGET "$SERVICE_URL/_cat/indices" -u "admin:$OPENSEARCH_PASSWORD" --insecure
+
+      - name: Check Proxy Logs
+        if: always()
+        run: |
+          kubectl logs -l app.kubernetes.io/name=opensearch-traffic-gateway
+
+      - name: Cleanup
+        run: |
+          helm uninstall opensearch-traffic-gateway
+          docker stop opensearch && docker rm opensearch
+          minikube delete --all

@@ -5,3 +5,5 @@
 build
 opensearch-traffic-gateway.tar
 .DS_Store
+
+**/bin
