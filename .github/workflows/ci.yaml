@@ -86,7 +86,7 @@ jobs:
 
       - name: Expose Service via Minikube
         run: |
-          echo "SERVICE_URL=https://$(minikube service opensearch-traffic-gateway --url | sed 's|http://|https://|')" >> $GITHUB_ENV
+          echo "SERVICE_URL=$(minikube service opensearch-traffic-gateway --url | sed 's|http://|https://|')" >> $GITHUB_ENV
           sleep 10
 
       - name: Test Proxy Server
