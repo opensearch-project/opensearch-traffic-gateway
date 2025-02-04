@@ -18,6 +18,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - run: mkdir /tmp/docker-cache -p
+
       - name: Cache Docker Images
         uses: actions/cache@v4
         with:
