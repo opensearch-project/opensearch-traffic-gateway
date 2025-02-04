@@ -25,7 +25,7 @@ jobs:
 
       - name: Test OpenSearch Login
         run: |
-          curl -XGET http://127.0.0.1:9200/_cat/indices -u "admin:$OPENSEARCH_PASSWORD" --insecure
+          curl -XGET https://127.0.0.1:9200/_cat/indices -u "admin:$OPENSEARCH_PASSWORD" --insecure
 
       - name: Install Minikube CLI
         run: |
