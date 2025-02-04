@@ -41,7 +41,7 @@ jobs:
             docker save -o /tmp/docker-cache/opensearch.tar opensearchproject/opensearch:latest
           fi
           docker run -d --name opensearch -p 9200:9200 -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=$OPENSEARCH_PASSWORD" -e "discovery.type=single-node" opensearchproject/opensearch:latest
-          sleep 30 # Allow OpenSearch time to initialize
+          until curl -XGET https://127.0.0.1:9200/_cluster/health -u "admin:$OPENSEARCH_PASSWORD" --insecure | grep -q '"status":"green"'; do echo "Waiting for OpenSearch..."; sleep 2; done
 
       - name: Test OpenSearch Login
         run: |
@@ -82,12 +82,12 @@ jobs:
       - name: Install Helm Chart
         run: |
           helm install -f kubernetes/local.values.yaml opensearch-traffic-gateway ./kubernetes/opensearch-traffic-gateway
-          sleep 30 # Give the service time to start
+          until helm status opensearch-traffic-gateway | grep -q 'STATUS: deployed'; do echo "Waiting for Helm deployment..."; sleep 2; done
 
       - name: Expose Service via Minikube
         run: |
           echo "SERVICE_URL=$(minikube service opensearch-traffic-gateway --url | sed 's|http://|https://|')" >> $GITHUB_ENV
-          sleep 10
+          until curl -XGET "$SERVICE_URL/_cat/indices" -u "admin:$OPENSEARCH_PASSWORD" --insecure; do echo "Waiting for service..."; sleep 2; done
 
       - name: Test Proxy Server
         run: |
