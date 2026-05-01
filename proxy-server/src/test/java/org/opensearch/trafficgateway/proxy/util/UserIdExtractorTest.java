@@ -1,6 +1,7 @@
 package org.opensearch.trafficgateway.proxy.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.when;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
@@ -18,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.opensearch.trafficgateway.proxy.UnitTestBase;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 @ExtendWith(MockitoExtension.class)
 public class UserIdExtractorTest extends UnitTestBase {
@@ -90,5 +93,22 @@ public class UserIdExtractorTest extends UnitTestBase {
 
         // then
         assertThat(userToken).isEqualTo(samlToken);
+    }
+
+    @Test
+    void testThatGetUserIdFromSAMLXMLRejectsXXEPayload() {
+        // given - XXE payload attempting to read a local file
+        String xxePayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<!DOCTYPE foo [\n"
+                + "  <!ENTITY xxe SYSTEM \"file:///etc/hostname\">\n"
+                + "]>\n"
+                + "<Assertion><Subject><NameID>&xxe;</NameID></Subject></Assertion>";
+        byte[] xxeBytes = xxePayload.getBytes(StandardCharsets.UTF_8);
+        UserIdExtractor extractor = new UserIdExtractor();
+
+        // when/then - should reject DOCTYPE declarations
+        assertThatThrownBy(() -> extractor.getUserIdFromSAMLXML(xxeBytes))
+                .isInstanceOf(SAXParseException.class)
+                .hasMessageContaining("DOCTYPE");
     }
 }

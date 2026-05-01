@@ -37,7 +37,20 @@ public class UserIdExtractor {
 
     private static final Decoder BASE64_DECODER = Base64.getDecoder();
     private static final XPath XPATH = XPathFactory.newInstance().newXPath();
-    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    private static final DocumentBuilderFactory DOC_BUILDER_FACTORY = createSecureDocBuilderFactory();
+
+    private static DocumentBuilderFactory createSecureDocBuilderFactory() {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setExpandEntityReferences(false);
+        } catch (javax.xml.parsers.ParserConfigurationException e) {
+            throw new RuntimeException("Failed to configure secure XML parser", e);
+        }
+        return factory;
+    }
 
     private final XPathExpression samlUserIdXPath;
     private final String samlTokenCookieName;
