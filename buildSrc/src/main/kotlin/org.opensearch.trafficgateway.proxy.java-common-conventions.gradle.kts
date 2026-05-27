@@ -30,7 +30,7 @@ val log4jVersion: String by rootProject.extra("2.22.1")
 dependencies {
     constraints {
         implementation("org.apache.commons:commons-text:1.11.0")
-        implementation("org.apache.commons:commons-lang3:3.14.0")
+        implementation("org.apache.commons:commons-lang3:3.18.0")
         implementation("io.netty:netty-all:4.1.115.Final")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
         implementation("io.burt:jmespath-jackson:0.6.0")
