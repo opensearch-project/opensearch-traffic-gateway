@@ -27,7 +27,7 @@ dependencies {
 
     implementation("io.netty:netty-all")
 
-    implementation("org.opensearch:opensearch:2.11.0")
+    implementation("org.opensearch:opensearch:2.19.4")
 
     opensearchSecurityPlugin("org.opensearch.plugin:opensearch-security:2.11.1.0")
     implementation(files(zipTree("${opensearchSecurityPlugin.singleFile}").matching {
