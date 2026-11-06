@@ -12,5 +12,10 @@ This document contains a list of maintainers in this repo. See [opensearch-proje
 | Greg Schohn        | [gregschohn](https://github.com/gregschohn)           | Amazon      |
 | Mikayla Thompson   | [mikaylathompson](https://github.com/mikaylathompson) | Amazon      |
 | Peter Nied         | [peternied](https://github.com/peternied)             | Amazon      |
-| Robin Zimmerman    | [rlashofregas](https://github.com/rlashofregas)       | Amazon      |
 | Tanner Lewis       | [lewijacn](https://github.com/lewijacn)               | Amazon      |
+
+## Emeritus
+
+| Maintainer         | GitHub ID                                       |
+| ------------------ | ------------------------------------------------ |
+| Robin Zimmerman     | [rlashofregas](https://github.com/rlashofregas) |
